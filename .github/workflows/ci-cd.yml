@@ -26,14 +26,28 @@ jobs:
       - name: Run unit tests
         run: python -m pytest docker/backend/test_app.py -v
 
-      - name: Build backend Docker image
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        if: github.event_name == 'push'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and publish backend
+        if: github.event_name == 'push'
         uses: docker/build-push-action@v6
         with:
           context: ./docker/backend
-          push: false
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/fa2-backend:latest
 
-      - name: Build frontend Docker image
+      - name: Build and publish frontend
+        if: github.event_name == 'push'
         uses: docker/build-push-action@v6
         with:
           context: ./docker/frontend
-          push: false
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/fa2-frontend:latest
