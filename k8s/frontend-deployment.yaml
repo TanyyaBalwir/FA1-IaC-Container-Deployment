@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: YOUR_DOCKERHUB_USERNAME/fa2-frontend:latest
+          image: tanyyabalwir/fa2-frontend:latest
           ports:
             - containerPort: 80
